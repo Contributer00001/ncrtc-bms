@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine
 from app.models import models
-from app.routers import auth, cms
+from app.routers import auth, cms, scheduling
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -18,6 +18,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(cms.router)
+app.include_router(scheduling.router)
 
 @app.get("/")
 def root():

@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: ncrtc_db
+    environment:
+      POSTGRES_USER: ncrtc
+      POSTGRES_PASSWORD: ncrtc123
+      POSTGRES_DB: ncrtc_bms
+    ports:
+      - "5432:5432"
+    volumes:
+      - ncrtc_pgdata:/var/lib/postgresql/data
+
+volumes:
+  ncrtc_pgdata:

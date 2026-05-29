@@ -1,4 +1,6 @@
 services:
+
+  # PostgreSQL database
   db:
     image: postgis/postgis:16-3.4
     container_name: ncrtc_db
@@ -10,6 +12,52 @@ services:
       - "5432:5432"
     volumes:
       - ncrtc_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ncrtc -d ncrtc_bms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # FastAPI backend
+  backend:
+    build: ./backend
+    container_name: ncrtc_backend
+    environment:
+      DATABASE_URL: postgresql://ncrtc:ncrtc123@db:5432/ncrtc_bms
+      SECRET_KEY: changethisbeforeproduction
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+  # GPS tick script
+  tick:
+    build: ./backend
+    container_name: ncrtc_tick
+    environment:
+      DATABASE_URL: postgresql://ncrtc:ncrtc123@db:5432/ncrtc_bms
+      SECRET_KEY: changethisbeforeproduction
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: ["bash", "start_tick.sh"]
+
+  # React frontend
+  frontend:
+    build: ./frontend
+    container_name: ncrtc_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
 volumes:
   ncrtc_pgdata:

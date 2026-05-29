@@ -89,19 +89,16 @@ ncrtc-bms/
 │   │   ├── database.py      # DB connection
 │   │   ├── auth.py          # JWT + bcrypt helpers
 │   │   ├── models/          # SQLAlchemy DB models (11 tables)
-│   │   ├── schemas/         # Pydantic request/response shapes
-│   │   ├── routers/         # One file per module (auth, avls, scheduling, ims, cms)
-│   │   ├── services/        # Business logic
+│   │   ├── routers/         # One file per module
 │   │   └── dependencies.py  # Auth middleware
 │   ├── seed/
-│   │   ├── seed.py          # Inserts all dummy data on startup
-│   │   └── tick.py          # GPS simulation — moves vehicles every 5s
+│   │   ├── seed.py          # Inserts dummy data on startup
+│   │   └── tick.py          # GPS simulation
 │   └── Dockerfile
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/           # One folder per module
-│   │   ├── api/             # Axios calls — one file per module
-│   │   └── App.jsx          # Routing and auth state
+│   │   └── api/             # Axios calls per module
 │   └── Dockerfile
 ├── docker-compose.yml
 └── README.md
